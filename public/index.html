@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spy</title>
+    <link rel="stylesheet" href="./styles/style.css"/>
+</head>
+<body>
+    <div class="pages">
+        <form class="enter-page">
+            <p>Введите количество игроков</p>
+            <input class="input" minvalue="0" type="number"/>
+            <input type="submit" class="button enter-page__ok" value="Задать количество"/>
+        </form>
+        <div class="sorter-page" data-url="sorter">
+            <p class="sorter-page__player"></p>
+            <p class="sorter-page__text"></p>
+            <button class="button sorter-page__show"></button>
+        </div>
+    </div>
+    <script type="module" src="./scripts/script.mjs"></script>
+</body>
+</html>
