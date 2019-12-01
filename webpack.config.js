@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: './src/script.mjs',
   output: {
@@ -16,6 +16,9 @@ module.exports = {
         chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
       }),  
+      new CopyPlugin([
+        { from: 'favicon', to: './' }
+      ]),
   ],
   module: {
     rules: [
