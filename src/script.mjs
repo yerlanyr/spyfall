@@ -1,5 +1,6 @@
 import routing from './routing.mjs';
 import places from './places.mjs';
+import './styles/style.css'
 
 const q = c => document.querySelector(c);
 
