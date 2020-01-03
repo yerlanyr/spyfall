@@ -19,9 +19,9 @@ const store = {
     currentPlayer: 0,
     show: false,
     spy: 0,
-    placeIndex: 0
+    placeIndex: 0,
+    isDark: true
 };
-
 
 function updateSorterPage(){
     const button = q('.sorter-page__show');
@@ -36,6 +36,8 @@ function updateSorterPage(){
 (function enterPage(updateSorterPage, store, places, q){
     const input = q('.input');
     const form = q('.enter-page');
+    const themeButton = q('.enter-page__theme-button');
+    const pagesDiv = q('.pages');
     form.addEventListener('submit', function(event){
         event.preventDefault();
         store.amount = +input.value;
@@ -47,6 +49,14 @@ function updateSorterPage(){
         updateSorterPage();
         input.value = '';
     });
+    const renderThemeButton = () => { themeButton.textContent = store.isDark ? 'Светлая тема' : 'Темная тема'; }
+    if(store.isDark) { pagesDiv.classList.add('pages_theme_dark'); }
+    themeButton.addEventListener('click', function(event){
+        store.isDark = !store.isDark;
+        pagesDiv.classList.toggle('pages_theme_dark');
+        renderThemeButton();
+    });
+    renderThemeButton();
 })(updateSorterPage, store, places, q);
 
 (function sorterPage(updateSorterPage, store, q){

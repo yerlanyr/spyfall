@@ -1,19 +1,30 @@
 * { 
     font-family: inherit;
 }
+body, html{
+    margin: 0;
+    padding: 0;
+}
 .pages{
     display:flex;
     flex-flow: column;
     align-items: center;
     font-family: Nunito, Tahoma, sans-serif;
+    min-height: 100vh;
 }
 .title{
     font-size: 1.2em;
     font-weight: 400;
     color: #666;
 }
+.pages_theme_dark .title{
+    color: #eee;
+}
 .muted{
     color: #777;
+}
+.pages_theme_dark .muted{
+    color: #aaa;
 }
 .sorter-page__text{
     height: 3em;
@@ -25,6 +36,10 @@
 .enter-page{
     text-align:center;
     width: 100%;
+}
+.button.enter-page__theme-button{
+    display: block;
+    margin: 50px auto 0;
 }
 .button {
     height: 42px;
@@ -58,3 +73,6 @@
     margin-bottom: 30px;
 }
 
+.pages.pages_theme_dark {
+    background: #333;
+}
