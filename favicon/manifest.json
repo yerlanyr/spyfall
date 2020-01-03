@@ -1,6 +1,12 @@
 {
- "name": "App",
- "background_color": "white",
+ "name": "Spyfalls",
+ "short_name": "Spyfalls",
+ "start_url": ".",
+ "display": "standalone",
+ "background_color": "#333",
+ "theme_color": "#333",
+ "description": "A spy falls app.",
+ "lang": "ru",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
