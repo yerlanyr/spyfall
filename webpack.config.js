@@ -8,7 +8,7 @@ module.exports = {
     filename: 'script.js'
   },
   plugins: [
-    new HtmlWebpackPlugin({filename: './index.html', template: './src/index.html'}),
+    new HtmlWebpackPlugin({filename: './index.html', template: './src/index.html', hash: false, cache: true}),
     new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // all options are optional
@@ -17,7 +17,8 @@ module.exports = {
         ignoreOrder: false, // Enable to remove warnings about conflicting order
       }),  
       new CopyPlugin([
-        { from: 'favicon', to: './' }
+        'favicon',
+        'serviceWorker.js'
       ]),
   ],
   module: {

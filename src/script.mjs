@@ -2,6 +2,15 @@ import routing from './routing.mjs';
 import places from './places.mjs';
 import './styles/style.css'
 
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./serviceWorker.js')
+        .then((reg) => {
+            console.log('Registration succeeded. Scope is ', reg.scope);
+        }).catch((error) => {
+            console.log('Registration failed with', error);
+        })
+}
+
 const q = c => document.querySelector(c);
 
 const navigate = routing(q('.pages'));
