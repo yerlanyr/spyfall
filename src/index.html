@@ -25,20 +25,181 @@
     <meta name="theme-color" content="#ffffff">
 
     <link defer href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        :root {
+            --grey-50: #333;
+            --grey-100: #666;
+            --grey-200: #777;
+            --grey-300: #aaa;
+            --grey-400: #eee;
+            --grey-800: #fff;
+            --blue-400: #3681d6;
+            --blue-800: #95aadf;
+        }
+        * { 
+            font-family: inherit;
+        }
+        body, html{
+            margin: 0;
+            padding: 0;
+        }
+        .pages{
+            display:flex;
+            flex-flow: column;
+            align-items: center;
+            font-family: Nunito, Tahoma, sans-serif;
+            min-height: 100vh;
+        }
+        .title{
+            font-size: 1.2em;
+            font-weight: 400;
+            color: var(--grey-100);
+        }
+        .pages_theme_dark .title{
+            color: var(--grey-400);
+        }
+        .muted{
+            color: var(--grey-200);
+        }
+        .pages_theme_dark .muted{
+            color: var(--grey-300);
+        }
+        .sorter-page__text{
+            height: 3em;
+        }
+        .sorter-page{
+            width: 100%;
+            text-align: center
+        }
+        .enter-page{
+            text-align:center;
+            width: 100%;
+        }
+        .button.enter-page__theme-button{
+            display: block;
+            margin: 50px auto 0;
+        }
+        .button {
+            height: 42px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            border-radius: 2px;
+            background-color: var(--blue-400);
+            border: none;
+            color: var(--grey-800);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 16px;
+            font-size: 16px;
+        }
+        .button:active{
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+
+        .input{ 
+            box-sizing: border-box;
+            display: inline-block;
+            min-height: 42px;
+            font-size: 16px;
+            max-height: 2em;
+            border-radius: 2px;
+            border-width: 1px;
+            border-style: solid;
+            padding: .5em;
+            border-color: var(--blue-800);
+            margin-bottom: 30px;
+        }
+
+        .pages.pages_theme_dark {
+            background: var(--grey-50);
+        }
+
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
-<body>
-    <div class="pages">
-        <form class="enter-page">
+<body x-data="data">
+    <div class="pages" x-bind:class="{pages_theme_dark: isDark}" x-cloak>
+        <div class="enter-page" x-show="page === 'enter-page'">
             <p class="title">Введите количество игроков</p>
-            <input class="input" min="3" type="number"/>
-            <input type="submit" class="button enter-page__ok" value="Задать количество"/>
-            <button type="button" class="button enter-page__theme-button">Темная тема</button>
-        </form>
-        <div class="sorter-page" data-url="sorter">
-            <p class="sorter-page__player muted"></p>
-            <p class="sorter-page__text title"></p>
-            <button class="button sorter-page__show"></button>
+            <input class="input" min="3" type="number" x-model="amount"/>
+            <input type="submit" class="button enter-page__ok" @click="setAmount()" value="Задать количество"/>
+        </div>
+        <div class="sorter-page" data-url="sorter" x-show="page === 'sorter-page'">
+            <p class="sorter-page__player muted" x-text="'Игрок №' + currentPlayer"></p>
+            <p class="sorter-page__text title" x-text="!show ? '' : currentPlayer === spy ? 'Вы шпион' : places[placeIndex]"></p>
+            <button class="button sorter-page__show" x-text="show ? 'Передать' : 'Показать'" @click="sorterPageBtnClick()"></button>
         </div>
     </div>
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./serviceWorker.js')
+                .then((reg) => {
+                    console.log('Registration succeeded. Scope is ', reg.scope);
+                }).catch((error) => {
+                    console.log('Registration failed with', error);
+                })
+        }
+
+        const places = [
+            'База террористов',
+            'Банк',
+            'Больница',
+            'Киностудия',
+            'Корпоративная вечеринка',
+            'Партизанский отряд',
+            'Пассажирский поезд',
+            'Пиратский корабль',
+            'Полярная станция',
+            'Посольство',
+            'Ресторан',
+            'Супермаркет',
+            'Театр',
+            'Университет',
+            'Воинская часть',
+            'Войско крестоносцев',
+            'Казино',
+            'Океанский лайнер',
+            'Орбитальная станция',
+            'Отель',
+            'Пляж',
+            'Подводная лодка',
+            'Полицейский участок',
+            'Самолет',
+            'Спа-салон',
+            'Станция техобслуживания',
+            'Церковь',
+            'Цирк',
+            'Школа'
+        ];
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('data', () => ({
+                page: 'enter-page', amount: 3, spy: 1, placeIndex: 0, places,
+                isDark: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+                show: false,
+                currentPlayer: 1,
+                setAmount() {
+                    this.page = 'sorter-page';
+                    // Random spy
+                    this.spy = Math.floor(Math.random() * parseInt(this.amount)) + 1;
+                    // Random place
+                    this.placeIndex = Math.floor(Math.random() * this.places.length); 
+                    this.currentPlayer = 1;
+                    this.show = false;
+                },
+                sorterPageBtnClick() {
+                    if(this.currentPlayer === parseInt(this.amount) && this.show) {
+                        this.page = 'enter-page';
+                    } else if(this.show) { 
+                        this.currentPlayer += 1;
+                    }
+
+                    this.show = !this.show; 
+                }
+            }));
+        });
+    </script>
 </body>
 </html>
